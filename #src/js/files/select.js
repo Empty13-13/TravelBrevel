@@ -25,22 +25,57 @@ const getTemplate = (data = [], placeholder, selectedId) => {
       </div>
   `
 }
+const getTemplate2 = (data = [], placeholder, selectedId) => {
+  let text = placeholder ?? ''
+
+  const items = data.map(item => {
+    let cls = ''
+    if (item.id === selectedId) {
+      text = item.value
+      cls = "selected"
+    }
+    return `
+    <li class="select__item ${cls}" data-type="item" data-id="${item.id}">${item.value}</li>
+    `
+  })
+
+  return `
+      <div class="select__backdrop" data-type="backdrop"></div>
+      <div class="select__input" data-type="input">
+        <span data-type="value">${text}</span>
+        <i class="fa fa-chevron-down" data-type="arrow"></i>
+      </div>
+      <div class="select__dropdown">
+        <ul class="select__list">
+          ${items.join('')}
+        </ul>
+      </div>
+  `
+}
 
 class Select {
   constructor(selector, options) {
     this.$el = document.querySelector(selector)
-    this.options = options
-    this.selectedId = options.selectedId
-    this.numeric = options.numeric || 0
+    if(this.$el) {
+      this.options = options
+      this.selectedId = options.selectedId
+      this.numeric = options.numeric || 0
+      this.type = options.type || 0
 
-    this.#render()
-    this.#setup()
+      this.#render()
+      this.#setup()
+    }
   }
 
   #render() {
     const {placeholder, data} = this.options
     this.$el.classList.add('select')
-    this.$el.innerHTML = getTemplate(data, placeholder, this.selectedId)
+    if(this.type === 0) {
+      this.$el.innerHTML = getTemplate(data, placeholder, this.selectedId)
+    } else if(this.type === 1)
+    {
+      this.$el.innerHTML = getTemplate2(data, placeholder, this.selectedId)
+    }
   }
 
   #setup() {
@@ -75,7 +110,6 @@ class Select {
   }
 
   get current() {
-
     return  this.options.data.find(item =>+item.id === +this.selectedId)
   }
 
@@ -99,6 +133,7 @@ class Select {
 
   select(id) {
     if (this.selectedId || this.selectedId === 0) {
+      console.log(this.selectedId)
       this.$el.querySelector(`[data-id="${this.selectedId}"]`).classList.remove('selected')
     }
     this.selectedId = id
@@ -238,6 +273,31 @@ async function startSelect() {
   }))
   // endregion
 }
+
+new Select('#continentSelect', {
+  placeholder: 'Все города',
+  data: [{id:1,value: 'Вариант 1'},{id:2,value: 'Вариант 2'},{id:3,value: 'Вариант 3'},{id:4,value: 'Вариант 4'}],
+  type: 1,
+  onOpen() {
+    closeAllSelects()
+  },
+})
+new Select('#countrySelect', {
+  placeholder: 'Все города',
+  data: [{id:1,value: 'Вариант 1'},{id:2,value: 'Вариант 2'},{id:3,value: 'Вариант 3'},{id:4,value: 'Вариант 4'}],
+  type: 1,
+  onOpen() {
+    closeAllSelects()
+  },
+})
+new Select('#citySelect', {
+  placeholder: 'Все города',
+  data: [{id:1,value: 'Вариант 1'},{id:2,value: 'Вариант 2'},{id:3,value: 'Вариант 3'},{id:4,value: 'Вариант 4'}],
+  type: 1,
+  onOpen() {
+    closeAllSelects()
+  },
+})
 
 function closeAllSelects() {
   selectsFilter.forEach(select => {

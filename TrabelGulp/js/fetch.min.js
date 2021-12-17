@@ -6,7 +6,7 @@ let dataStatistic = {
 }
 let url = `https://tb.vps.webdock.io/api/info/statistic_useful`
 
-replaceData();
+// replaceData();
 
 async function replaceData() {
   try {

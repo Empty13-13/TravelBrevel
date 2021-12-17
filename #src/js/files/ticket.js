@@ -13,7 +13,7 @@ async function startTicket() {
   ticketData = data.content
   ticketOrder = ticketData.map(item => item.type === "ticket")
   startSelect()
-  // updateSlides()
+  updateSlides()
 }
 
 const getTicket = (data) => {
@@ -58,7 +58,8 @@ const getTicket = (data) => {
     arrivalDate,
     discountPercentage,
     price,
-    meta
+    meta,
+    uuid
   } = data
 
   let isBack = !!arrivalCountry;
@@ -83,7 +84,7 @@ const getTicket = (data) => {
   }
   filters = filters.join('')
 
-  if (isBack){
+  if (isBack) {
     backBlockDate = `
        <div class="text-line__date-until">
           <div class="text-line__date-until-name">Обратно:</div>
@@ -97,7 +98,7 @@ const getTicket = (data) => {
     </div>
     `
   }
-  if (isVisa){
+  if (isVisa) {
     visaBlock = `
       <div class="block-slider-hot-offer__info-block"> 
         <div class="block-slider-hot-offer__info-block-body">
@@ -150,7 +151,7 @@ const getTicket = (data) => {
         ${visaBlock}
         ${transferBlock}
         </div>
-        <a class="block-slider-hot-offer__down-btn btn">от ${price.toLocaleString()} ₽</a></div>
+        <a href="ticket.html?uuid=${uuid}" class="block-slider-hot-offer__down-btn btn">от ${price.toLocaleString()} ₽</a></div>
     </div>
   </div>
   </div>
@@ -165,152 +166,29 @@ const getTicket = (data) => {
   }
 }
 
-
-startTicket()
-
-function constructorTicket(ticket) {
-  let {
-    segments,
-    discount_percentage,
-    proposal,
-    meta
-  } = ticket;
-  let visa = "",
-    textNum = "",
-    otherText = "";
-  let discount = ticket.discount_percentage > "70%" ? `          <li
-  class="block-slider-hot-offer__fire-filter block-slider-hot-offer__filter">
-<img src="img/icons/fire.svg" alt=""></li>` : ``;
-
-  var Date2 = new Date(+ticket.segments[0].departure_date.split('-')[0], +ticket.segments[0].departure_date.split('-')[1] - 1, +ticket.segments[0].departure_date.split('-')[2]);
-  var Date1 = new Date();
-  var Days = Math.floor((Date2.getTime() - Date1.getTime()) / (1000 * 60 * 60 * 24));
-  let quick = (Days < 3 || Days > -1) ? `<li
-  class="block-slider-hot-offer__bell-filter block-slider-hot-offer__filter">
-<img src="img/icons/bell.svg" alt=""></li>` : ``;
-  let arrow = ticket.segments.length > 1 ?
-    `<li
-  class="block-slider-hot-offer__arrow-filter block-slider-hot-offer__filter">
-<img src="img/icons/arrows.svg" alt=""></li>` :
-    `<li
-    class="block-slider-hot-offer__arrow-filter block-slider-hot-offer__filter">
-  <img src="img/icons/arrow-right.svg" alt=""></li>`;
-
-  let departureDate = ticket.segments.length > 1 ? `<div class="text-line__date-until">
-  <div class="text-line__date-until-name">Обратно:</div>
-  <div class="text-line__date-until-num">${segments[1].departure_date}</div>
-</div>` : ``;
-
-
-  if (!filterTickets(ticket)) {
-    return ""
-  }
-
-
-  meta.forEach(element => {
-    if (element.name == "Нужна виза") {
-      visa = `
-      <div class="block-slider-hot-offer__info-block">
-            <div class="block-slider-hot-offer__info-block-body">
-              <p class="block-slider-hot-offer__info-block-text _visa">Виза</p>
-            </div>
-      </div>`
-      return
-    }
-
-    if (element.name == "Количество пересадоĸ") {
-      textNum = `
-      <div class="block-slider-hot-offer__info-block">
-      <div class="block-slider-hot-offer__info-block-body">
-        <p
-           class="block-slider-hot-offer__info-block-text block-slider-hot-offer__info-block-text_num">
-          Пересадка <span>${element.counter}</span></p>
-      </div>
-    </div>`
-      return
-    }
-
-    otherText += `
-    <div class="block-slider-hot-offer__info-block">
-      <div class="block-slider-hot-offer__info-block-body">
-        <p class="block-slider-hot-offer__info-block-text">${element.name}</p>
-      </div>
-    </div>`
-  });
-
-  return `<div class="slider-hot-offer__slide">
-  <div class="slider-hot-offer__block block-slider-hot-offer">
-    <div class="block-slider-hot-offer__body">
-      <div class="block-slider-hot-offer__top">
-        <div class="block-slider-hot-offer__top-sale">-${discount_percentage}</div>
-        <ul class="block-slider-hot-offer__top-block-filters">
-          ${arrow}
-          ${quick}
-          ${discount}
-        </ul>
-      </div>
-      <hr class="hr">
-      </hr>
-      <div class="block-slider-hot-offer__text">
-        <h4 class="block-slider-hot-offer__text-line text-line">
-          <div class="text-line__date-from">
-            <div class="text-line__date-from-name">Вылет:</div>
-            <div class="text-line__date-from-num">${segments[0].departure_date}</div>
-          </div>
-          ${departureDate}
-
-        </h4>
-        <div class="block-slider-hot-offer__line-to">
-          <h4 class="block-slider-hot-offer__line-to-title">Куда:</h4>
-          <p class="block-slider-hot-offer__line-to-text">
-            ${segments[0].departure_city} <br>
-            <span>${segments[0].departure_country}</span>
-          </p>
-        </div>
-        <div class="block-slider-hot-offer__line-from">
-          <h4 class="block-slider-hot-offer__line-from-title">От куда:</h4>
-          <p class="block-slider-hot-offer__line-from-text">
-          ${segments[0].arrival_city} <br>
-          <span>${segments[0].arrival_country}</span>
-        </div>
-      </div>
-      <hr class="hr">
-      </hr>
-      <div class="block-slider-hot-offer__down">
-        <div class="block-slider-hot-offer__info">
-          ${visa}
-          ${textNum}
-          ${otherText}
-        </div>
-        <a class="block-slider-hot-offer__down-btn btn">от ${proposal.price.toLocaleString()} ₽</a>
-      </div>
-    </div>
-  </div>
-</div>`
+let select1 = document.querySelector('#select1');
+if(select1) {
+  // startTicket()
 }
 
 function constructorAd(ad) {
   let {
-    meta: {
-      size,
-      link,
-      redirect_href
-    }
+    size,
+    linkForContent,
+    redirectHref
   } = ad
 
   return `
-  <a href="${link}" class="slider-hot-offer__slide ${size == 1 ? "_ad" : "_big-ad"} _ibg">
-    <img src="${redirect_href}" alt="">
+  <a href="${redirectHref}" class="slider-hot-offer__slide ${+size === 1 ? "_ad" : "_big-ad"} _ibg">
+    <img src="${linkForContent}" alt="">
   </a>`
 }
 
-
-function updateSlides() {
+async function updateSlides() {
+  await slider_hot.removeAllSlides()
   ticketDataUsed = ticketData;
 
-  filterTicket()
-  slider_hot.removeAllSlides()
-
+  await filterTicket()
   loadAllSlides()
 }
 
@@ -339,21 +217,20 @@ function filterTicket() {
   // endregion
 
   //region Selects Filter
-  if(filtersSelect[0] !== filtersSelectStart[0]){
+  if (filtersSelect[0] !== filtersSelectStart[0]) {
     ticketDataUsed = ticketDataUsed.filter(item => item.departureCity === filtersSelect[0])
   }
-  if(filtersSelect[1] !== filtersSelectStart[1]){
+  if (filtersSelect[1] !== filtersSelectStart[1]) {
     ticketDataUsed = ticketDataUsed.filter(item => item.departureCountry === filtersSelect[1])
   }
-  if(filtersSelect[2] !== filtersSelectStart[2]){
-    if(filtersSelect[2] === "Обязательно") {
+  if (filtersSelect[2] !== filtersSelectStart[2]) {
+    if (filtersSelect[2] === "Обязательно") {
       ticketDataUsed = ticketDataUsed.filter(item => !!item.meta?.find(meta => meta.name === "Виза"))
-    }
-    else {
+    } else {
       ticketDataUsed = ticketDataUsed.filter(item => !item.meta?.find(meta => meta.name === "Виза"))
     }
   }
-  if(filtersSelect[3] !== filtersSelectStart[3]){
+  if (filtersSelect[3] !== filtersSelectStart[3]) {
     if (filtersSelect[3] === filtersSelectStart[4]) {
       ticketDataUsed = ticketDataUsed.filter(item => !!item.meta?.find(meta => meta.name === "Прямой перелет"))
     } else {
@@ -374,12 +251,13 @@ async function loadAllSlides() {
       if (ticket.type === "ticket") {
         resultEl.push(getTicket(ticket))
       } else {
-        // resultEl.push(await constructorAd(ticket))
+        resultEl.push(await constructorAd(ticket))
       }
       i++
     }
     resultEl = resultEl.join("")
     totalCountSlides = slider_hot.slides.length
+    console.log(slider_hot.slides.length)
     const slide = `<div data-hash="hot-${totalCountSlides + 1}" class="swiper-slide hot-offer__slider-block">${resultEl}</div>`
     await slider_hot.appendSlide(slide)
   }
@@ -389,7 +267,7 @@ let filtersList = document.querySelectorAll('.filters-hot-offer__btn');
 if (filtersList.length > 0) {
   for (let index = 0; index < filtersList.length; index++) {
     const element = filtersList[index];
-    element.addEventListener("click",  function (e) {
+    element.addEventListener("click", function (e) {
       element.classList.toggle('_active');
       filtersBtn[index] = !filtersBtn[index]
       if (index === 2) {
