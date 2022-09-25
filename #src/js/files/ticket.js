@@ -1,286 +1,289 @@
-let filtersBtn = [false, false, false, false]
-let filtersSelect = ["Все города", "Все варианты", "Все варианты", "Все варианты"]
-let filtersSelectStart = ["Все города", "Все варианты", "Все варианты", "Все варианты", "Без пересадок"]
-let ticketData = []
-let ticketDataUsed = []
-let ticketOrder = []
-let data = []
-let totalCountSlides = 0
-let urlTicket = "https://tb.vps.webdock.io/api/tickets/advantageous_tickets"
-
-async function startTicket() {
-  data = await fetchData(urlTicket)
-  ticketData = data.content
-  ticketOrder = ticketData.map(item => item.type === "ticket")
-  startSelect()
-  updateSlides()
-}
-
-const getTicket = (data) => {
-  const getBell = () => {
-    return `
-      <li class="block-slider-hot-offer__bell-filter block-slider-hot-offer__filter">
-        <picture>
-          <source srcset="img/icons/bell.svg" type="image/webp">
-          <img src="img/icons/bell.svg" alt="">
-        </picture>
-      </li>
-    `
-  }
-  const getArrow = (two = false) => {
-    let src = "arrow-right.svg"
-    if (two) {
-      src = "arrows.svg"
-    }
-    return `
-          <li class="block-slider-hot-offer__arrow-filter block-slider-hot-offer__filter">
-            <picture>
-              <source srcset="img/icons/${src}" type="image/webp">
-              <img src="img/icons/${src}" alt=""></picture>
-          </li>
-    `
-  }
-  const getFire = () => {
-    return `
-          <li class="block-slider-hot-offer__fire-filter block-slider-hot-offer__filter">
-            <picture>
-              <source srcset="img/icons/fire.svg" type="image/webp">
-              <img src="img/icons/fire.svg" alt=""></picture>
-          </li>
-    `
-  }
-  let {
-    departureCountry,
-    departureCity,
-    departureDate,
-    arrivalCountry,
-    arrivalCity,
-    arrivalDate,
-    discountPercentage,
-    price,
-    meta,
-    uuid
-  } = data
-
-  let isBack = !!arrivalCountry;
-  let isVisa = !!meta?.find(item => item.name === "Виза")
-  let isTransfer = !!meta?.find(item => item.name === "Пересадка")
-  let backBlockDate = ""
-  let backBlockPlace = ""
-  let visaBlock = ""
-  let transferBlock = ""
-
-  let filters = []
-  if (discountPercentage > 70) {
-    filters.push(getFire())
-  }
-  if (isDate()) {
-    filters.push(getBell())
-  }
-  if (isBack) {
-    filters.push(getArrow(true))
-  } else {
-    filters.push(getArrow(false))
-  }
-  filters = filters.join('')
-
-  if (isBack) {
-    backBlockDate = `
-       <div class="text-line__date-until">
-          <div class="text-line__date-until-name">Обратно:</div>
-          <div class="text-line__date-until-num">${arrivalDate}</div>
-       </div>
-    `
-    backBlockPlace = `
-    <div class="block-slider-hot-offer__line-from">
-      <h4 class="block-slider-hot-offer__line-from-title">От куда:</h4>
-      <p class="block-slider-hot-offer__line-from-text"> ${arrivalCity} <br> <span>${arrivalCountry}</span></p>
-    </div>
-    `
-  }
-  if (isVisa) {
-    visaBlock = `
-      <div class="block-slider-hot-offer__info-block"> 
-        <div class="block-slider-hot-offer__info-block-body">
-        <p class="block-slider-hot-offer__info-block-text _visa">Виза</p></div>
-      </div>
-    `
-  }
-  if (isTransfer) {
-    let counter = (meta?.find(item => item.name === "Пересадка"))?.counter
-    transferBlock = `
-    <div class="block-slider-hot-offer__info-block">
-      <div class="block-slider-hot-offer__info-block-body">
-        <p class="block-slider-hot-offer__info-block-text block-slider-hot-offer__info-block-text_num">
-              Пересадка <span>${counter}</span>
-        </p>
-      </div>
-    </div>
-    `
-  }
-
-
-  return `
-  <div class="slider-hot-offer__slide">
-  <div class="slider-hot-offer__block block-slider-hot-offer">
-    <div class="block-slider-hot-offer__body">
-      <div class="block-slider-hot-offer__top">
-        <div class="block-slider-hot-offer__top-sale">-${discountPercentage}%</div>
-        <ul class="block-slider-hot-offer__top-block-filters">
-          ${filters}
-        </ul>
-      </div>
-      <hr class="hr">
-      <div class="block-slider-hot-offer__text">
-        <h4 class="block-slider-hot-offer__text-line text-line">
-          <div class="text-line__date-from">
-            <div class="text-line__date-from-name">Вылет:</div>
-            <div class="text-line__date-from-num">${departureDate}</div>
-          </div>
-          ${backBlockDate}
-        </h4>
-        <div class="block-slider-hot-offer__line-to"><h4 class="block-slider-hot-offer__line-to-title">
-          Куда:</h4>
-          <p class="block-slider-hot-offer__line-to-text"> ${departureCity} <br> <span>${departureCountry}</span></p>
-        </div>
-        ${backBlockPlace}
-      </div>
-      <hr class="hr">
-      <div class="block-slider-hot-offer__down">
-        <div class="block-slider-hot-offer__info">
-        ${visaBlock}
-        ${transferBlock}
-        </div>
-        <a href="ticket.html?uuid=${uuid}" class="block-slider-hot-offer__down-btn btn">от ${price.toLocaleString()} ₽</a></div>
-    </div>
-  </div>
-  </div>
-  `
-
-
-  function isDate() {
-    let Date2 = new Date(+departureDate.split('-')[0], +departureDate.split('-')[1] - 1, departureDate.split('-')[2]);
-    let Date1 = new Date();
-    let Days = Math.floor((Date2.getTime() - Date1.getTime()) / (1000 * 60 * 60 * 24));
-    return Days > 3 && Days < -1
-  }
-}
-
-let select1 = document.querySelector('#select1');
-if(select1) {
-  // startTicket()
-}
-
-function constructorAd(ad) {
-  let {
-    size,
-    linkForContent,
-    redirectHref
-  } = ad
-
-  return `
-  <a href="${redirectHref}" class="slider-hot-offer__slide ${+size === 1 ? "_ad" : "_big-ad"} _ibg">
-    <img src="${linkForContent}" alt="">
-  </a>`
-}
-
-async function updateSlides() {
-  await slider_hot.removeAllSlides()
-  ticketDataUsed = ticketData;
-
-  await filterTicket()
-  loadAllSlides()
-}
-
-function filterTicket() {
-  // region Btns Filter
-  if (filtersBtn[0]) {
-    ticketDataUsed = ticketDataUsed.filter(item => item.type !== "ticket" || item.discountPercentage > 70)
-  }
-  if (filtersBtn[1]) {
-    ticketDataUsed = ticketDataUsed.filter(item => {
-      if (item.type !== "ticket") {
-        return true
-      }
-      let Date2 = new Date(+item.departureDate.split('-')[0], +item.departureDate.split('-')[1] - 1, +item.departureDate.split('-')[2]);
-      let Date1 = new Date();
-      let Days = Math.floor((Date2.getTime() - Date1.getTime()) / (1000 * 60 * 60 * 24));
-      return Days > 3 && Days < -1
-    })
-  }
-  if (filtersBtn[2]) {
-    ticketDataUsed = ticketDataUsed.filter(item => item.type !== "ticket" || !!item.arrivalCountry)
-  }
-  if (filtersBtn[3]) {
-    ticketDataUsed = ticketDataUsed.filter(item => item.type !== "ticket" || !item.arrivalCountry)
-  }
+let filterBtns = document.querySelectorAll('.filters-hot-offer__btn');
+if (filterBtns.length > 0) {
+  // region Global vars
+  var moreBtn = document.querySelector('#moreTicket')
+  let filtersStatus = [false, false, false, false];
+  let urlTicket = "http://194.58.92.109/v1/advantageousTickets?page="
+  let numPage = 0
+  let ticketData = []
+  let activeData = []
+  let allData = []
+  let data = []
+  let totalPages = 0
   // endregion
 
-  //region Selects Filter
-  if (filtersSelect[0] !== filtersSelectStart[0]) {
-    ticketDataUsed = ticketDataUsed.filter(item => item.departureCity === filtersSelect[0])
-  }
-  if (filtersSelect[1] !== filtersSelectStart[1]) {
-    ticketDataUsed = ticketDataUsed.filter(item => item.departureCountry === filtersSelect[1])
-  }
-  if (filtersSelect[2] !== filtersSelectStart[2]) {
-    if (filtersSelect[2] === "Обязательно") {
-      ticketDataUsed = ticketDataUsed.filter(item => !!item.meta?.find(meta => meta.name === "Виза"))
-    } else {
-      ticketDataUsed = ticketDataUsed.filter(item => !item.meta?.find(meta => meta.name === "Виза"))
-    }
-  }
-  if (filtersSelect[3] !== filtersSelectStart[3]) {
-    if (filtersSelect[3] === filtersSelectStart[4]) {
-      ticketDataUsed = ticketDataUsed.filter(item => !!item.meta?.find(meta => meta.name === "Прямой перелет"))
-    } else {
-      ticketDataUsed = ticketDataUsed.filter(item => !!item.meta?.find(meta => meta.name === "Пересадка" && +meta.counter === +filtersSelect[3].trim()))
-    }
-  }
-  // endregion
-
-}
-
-async function loadAllSlides() {
-  let i = 0
-  while (i < ticketDataUsed.length) {
-    let resultEl = [];
-
-    while (resultEl.length < 16 && i < ticketDataUsed.length) {
-      let ticket = ticketDataUsed[i]
-      if (ticket.type === "ticket") {
-        resultEl.push(getTicket(ticket))
-      } else {
-        resultEl.push(await constructorAd(ticket))
+  // region AddEventListener
+  filterBtns.forEach((item, index) => {
+    item.addEventListener("click", function (e) {
+      item.classList.toggle('_active')
+      filterBtns[index] = !filterBtns[index]
+      filtersStatus[index] = !filtersStatus[index]
+      filterTicket()
+    });
+  })
+  filterBtns[2].addEventListener("click", function (e) {
+    filterBtns[3].classList.remove('_active')
+    filterBtns[3] = false
+    filtersStatus[3] = false
+    filterTicket()
+  });
+  filterBtns[3].addEventListener("click", function (e) {
+    filterBtns[2].classList.remove('_active')
+    filterBtns[2] = false
+    filtersStatus[2] = false
+    filterTicket()
+  });
+  if (moreBtn) {
+    moreBtn.addEventListener("click", async function (e) {
+      numPage++
+      await startTicket()
+      filterTicket()
+      console.log(totalPages, numPage)
+      if (!(numPage < totalPages - 1)) {
+        moreBtn.style.cssText = "display:none;"
+        return false
       }
-      i++
-    }
-    resultEl = resultEl.join("")
-    totalCountSlides = slider_hot.slides.length
-    console.log(slider_hot.slides.length)
-    const slide = `<div data-hash="hot-${totalCountSlides + 1}" class="swiper-slide hot-offer__slider-block">${resultEl}</div>`
-    await slider_hot.appendSlide(slide)
-  }
-}
-
-let filtersList = document.querySelectorAll('.filters-hot-offer__btn');
-if (filtersList.length > 0) {
-  for (let index = 0; index < filtersList.length; index++) {
-    const element = filtersList[index];
-    element.addEventListener("click", function (e) {
-      element.classList.toggle('_active');
-      filtersBtn[index] = !filtersBtn[index]
-      if (index === 2) {
-        filtersBtn[3] = false;
-        filtersList[3].classList.remove('_active');
-      }
-      if (index === 3) {
-        filtersBtn[2] = false;
-        filtersList[2].classList.remove('_active');
-      }
-
-      updateSlides();
-
     });
   }
+
+
+  // endregion
+
+  async function startTicket() {
+    moreBtn.disabled = true
+    allData = await fetchData(urlTicket)
+    data = data.concat(allData.content)
+    totalPages = allData.totalPages
+    activeData = JSON.parse(JSON.stringify(data));
+    getTickets()
+    moreBtn.disabled = false
+  }
+
+  startTicket()
+
+  // region functions
+  async function fetchData(url) {
+    try {
+      const response = await fetch(url + numPage)
+      return response.json()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async function getTickets() {
+    let body = document.querySelector('#dates')
+    body.innerHTML = ''
+
+    if (body) {
+      let tickets = []
+
+      //Создаем билеты
+      activeData.forEach(item => {
+        tickets.push(getTicket(item))
+      })
+
+      //Добавляем билет в группу
+      let group = getGroup(tickets)
+      body.append(group)
+    }
+  }
+
+  //Функция фильтров
+  function filterTicket() {
+    let body = document.querySelector('#dates')
+    activeData = JSON.parse(JSON.stringify(data));
+
+    if (filtersStatus[0]) {
+      activeData = activeData.map((item) => {
+        if (item.discountPercentage >= 70) {
+          return item
+        } else {
+          return null
+        }
+      })
+      activeData = activeData.filter(item => !!item)
+    }
+    if (filtersStatus[1]) {
+      activeData = activeData.map((item) => {
+        let dateNow = new Date();
+        let date2 = new Date(item.departure_date)
+        if (Math.abs(date2 - dateNow) < 2.592e+8) {
+          return item
+        } else {
+          return null
+        }
+      })
+      activeData = activeData.filter(item => !!item)
+    }
+    if (filtersStatus[2]) {
+      activeData = activeData.filter(item => !!item.arrivalDate)
+    }
+    if (filtersStatus[3]) {
+      activeData = activeData.filter(item => !item.arrivalDate)
+    }
+    activeData.filter(item => item.length > 0)
+
+
+    getTickets()
+  }
+
+  // region getters
+
+  const getTicket = (data) => {
+    // region Vars
+    let {
+      arrivalCityName,
+      arrivalCountryName,
+      arrivalDate,
+      currency_name,
+      departureCityName,
+      departureCountryName,
+      departureDate,
+      discountPercentage,
+      price,
+      id,
+      transfers,
+      isVisa
+    } = data
+    let discount = ``
+    let arrival = ``
+    let transferIcon = ''
+    let visaIcon = ''
+    let fireIcon = ''
+    let bellIcon = ``
+    // endregion
+
+    //Назначение времени
+    departureDate = new Date(departureDate)
+    arrivalDate ? arrivalDate = new Date(arrivalDate) : null
+
+
+    // region If group
+    if (discountPercentage) {
+      discount = `<div class="top-newTicket__sale">-${discountPercentage}%</div>`
+    }
+    if (arrivalCityName && arrivalDate) {
+      arrival = `
+                        <div class="center-newTicket__departure departure-center-newTicket">
+                          <div class="departure-center-newTicket__back-arrow">
+                            <svg width="16" height="12" viewBox="0 0 16 12" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                              <path d="M15 5.99999L2.00001 5.99999M5.81837 10.8184L1.00001 5.99999L5.81837 1.18163"
+                                    stroke="#7B7B7B"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </div>
+                          <div class="departure-center-newTicket__data">
+                            <div class="departure-center-newTicket__date">${arrivalDate.toLocaleString().split(',')[0].replaceAll('/', '.').replaceAll(',', ' ')}</div>
+                            <div class="departure-center-newTicket__city">${arrivalCityName}, ADD</div>
+                          </div>
+                        </div>
+      `
+    }
+    if (discountPercentage >= 70) {
+      fireIcon = `
+      <div class="icons-center-newTicket__fire icons-center-newTicket__icon-group">
+          <img src="img/icons/fire.svg" alt="">
+      </div>
+      `
+      discount = `<div class="top-newTicket__sale _red">-${discountPercentage}%</div>`
+    }
+
+    if (transfers) {
+      transferIcon = `
+        <div class="icons-center-newTicket__transfer icons-center-newTicket__icon-group">
+         ${transfers}
+        </div>
+        `
+    }
+    if (isVisa) {
+      visaIcon = `
+        <div class="icons-center-newTicket__warning icons-center-newTicket__icon-group">
+            <img src="img/icons/warning-circle.svg" alt="">
+        </div>
+        `
+    }
+
+    let dateNow = new Date();
+    let date2 = new Date(departureDate)
+    if (Math.abs(date2 - dateNow) < 2.592e+8) {
+      bellIcon = `
+      <div class="icons-center-newTicket__bell icons-center-newTicket__icon-group">
+          <img src="img/icons/bell.svg" alt="">
+      </div>
+      `
+    }
+    // endregion
+
+    let div = document.createElement('div');
+    div.classList.add('newTicket')
+    div.innerHTML = `
+                      <div class="newTicket__body">
+                    <div class="newTicket__top top-newTicket">
+                      <div class="top-newTicket__body">
+                        <div class="top-newTicket__title">
+                          <p class="top-newTicket__city">${arrivalCityName}</p>
+                          <p class="top-newTicket__country">${arrivalCountryName}</p>
+                        </div>
+                        ${discount}
+                      </div>
+                    </div>
+                    <div class="newTicket__center center-newTicket">
+                      <div class="center-newTicket__body">
+                        <div class="center-newTicket__departure departure-center-newTicket">
+                          <div class="departure-center-newTicket__arrow">
+                            <svg width="16" height="12" viewBox="0 0 16 12" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                              <path d="M0.999985 6.00001H14M10.1816 1.18164L15 6.00001L10.1816 10.8184" stroke="#7B7B7B"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                          </div>
+                          <div class="departure-center-newTicket__data">
+                            <div class="departure-center-newTicket__date">${departureDate.toLocaleString().split(',')[0].replaceAll('/', '.').replaceAll(',', ' ')}</div>
+                            <div class="departure-center-newTicket__city">${departureCityName.replaceAll('/', '.').replaceAll(',', ' ')}, SVO</div>
+                          </div>
+                        </div>
+                        ${arrival}
+                      </div>
+                    </div>
+                    <div class="center-newTicket__icons icons-center-newTicket">
+                      ${bellIcon}
+                      ${transferIcon}
+                      ${visaIcon}
+                      ${fireIcon}
+                    </div>
+                    <div class="newTicket__bottom bottom-newTicket">
+                      <div class="bottom-newTicket__body">
+                        <div class="bottom-newTicket__price">${price.toLocaleString().replaceAll(',', ' ')} ₽</div>
+                        <a href="/ticket.html?uuid=${id}" class="bottom-newTicket__btn-more">Подробнее</a>
+                      </div>
+                    </div>
+                  </div>
+    `
+    return div
+  }
+
+  const getGroup = (tickets) => {
+    let div = document.createElement('div')
+    div.classList.add('slider-hot-offer__group')
+
+    // let titleDiv = document.createElement('div')
+    // titleDiv.classList.add('slider-hot-offer__title')
+    // titleDiv.innerText = title
+    //
+    // div.append(titleDiv)
+
+    let block = document.createElement('div')
+    block.classList.add('swiper-slide', 'hot-offer__slider-block')
+    block.append(...tickets)
+
+    div.append(block)
+
+    return div
+  }
+
+  // endregion
+
+  // endregion
 }

@@ -1,146 +1,5 @@
 
 
-//let btn = document.querySelectorAll('button[type="submit"],input[type="submit"]');
-// let forms = document.querySelectorAll('form');
-// if (forms.length > 0) {
-// 	for (let index = 0; index < forms.length; index++) {
-// 		const el = forms[index];
-// 		el.addEventListener('submit', form_submit);
-// 	}
-// }
-// async function form_submit(e) {
-// 	let btn = e.target;
-// 	let form = btn.closest('form');
-// 	let error = form_validate(form);
-// 	if (error == 0) {
-// 		let formAction = form.getAttribute('action') ? form.getAttribute('action').trim() : '#';
-// 		let formMethod = form.getAttribute('method') ? form.getAttribute('method').trim() : 'GET';
-// 		const message = form.getAttribute('data-message');
-// 		const ajax = form.getAttribute('data-ajax');
-//
-// 		//SendForm
-// 		if (ajax) {
-// 			e.preventDefault();
-// 			let formData = new FormData(form);
-// 			form.classList.add('_sending');
-// 			let response = await fetch(formAction, {
-// 				method: formMethod,
-// 				body: formData
-// 			});
-// 			if (response.ok) {
-// 				let result = await response.json();
-// 				form.classList.remove('_sending');
-// 				if (message) {
-// 					popup_open('_' + message + '-message');
-// 				}
-// 				form_clean(form);
-// 			} else {
-// 				alert("Ошибка");
-// 				form.classList.remove('_sending');
-// 			}
-// 		}
-// 	} else {
-// 		let form_error = form.querySelectorAll('._error');
-// 		if (form_error && form.classList.contains('_goto-error')) {
-// 			_goto(form_error[0], 1000, 50);
-// 		}
-// 		e.preventDefault();
-// 	}
-// }
-//
-// function form_validate(form) {
-// 	let error = 0;
-// 	let form_req = form.querySelectorAll('._req');
-// 	if (form_req.length > 0) {
-// 		for (let index = 0; index < form_req.length; index++) {
-// 			const el = form_req[index];
-// 			if (!_is_hidden(el)) {
-// 				error += form_validate_input(el);
-// 			}
-// 		}
-// 	}
-// 	return error;
-// }
-//
-// function form_validate_input(input) {
-// 	let error = 0;
-// 	let input_g_value = input.getAttribute('data-value');
-//
-// 	if (input.getAttribute("name") == "email" || input.classList.contains("_email")) {
-// 		if (input.value != input_g_value) {
-// 			let em = input.value.replace(" ", "");
-// 			input.value = em;
-// 		}
-// 		if (email_test(input)) {
-// 			form_add_error(input);
-// 			error++;
-// 		} else {
-// 			form_remove_error(input);
-// 		}
-// 	} else if (input.getAttribute("type") == "checkbox" && input.checked == false) {
-// 		form_add_error(input);
-// 		error++;
-// 	} else {
-// 		if (input.value == '') {
-// 			form_add_error(input);
-// 			error++;
-// 		} else {
-// 			form_remove_error(input);
-// 		}
-// 	}
-// 	return error;
-// }
-//
-// function form_add_error(input) {
-// 	input.classList.add('_error');
-// 	input.parentElement.classList.add('_error');
-//
-// 	let input_error = input.parentElement.querySelector('.form__error');
-// 	if (input_error) {
-// 		input.parentElement.removeChild(input_error);
-// 	}
-// 	let input_error_text = input.getAttribute('data-error');
-// 	if (input_error_text && input_error_text != '') {
-// 		input.parentElement.insertAdjacentHTML('beforeend', '<div class="form__error">' + input_error_text + '</div>');
-// 	}
-// }
-//
-// function form_remove_error(input) {
-// 	input.classList.remove('_error');
-// 	input.parentElement.classList.remove('_error');
-//
-// 	let input_error = input.parentElement.querySelector('.form__error');
-// 	if (input_error) {
-// 		input.parentElement.removeChild(input_error);
-// 	}
-// }
-//
-// function form_clean(form) {
-// 	let inputs = form.querySelectorAll('input,textarea');
-// 	for (let index = 0; index < inputs.length; index++) {
-// 		const el = inputs[index];
-// 		el.parentElement.classList.remove('_focus');
-// 		el.classList.remove('_focus');
-// 		el.value = el.getAttribute('data-value');
-// 	}
-// 	let checkboxes = form.querySelectorAll('.checkbox__input');
-// 	if (checkboxes.length > 0) {
-// 		for (let index = 0; index < checkboxes.length; index++) {
-// 			const checkbox = checkboxes[index];
-// 			checkbox.checked = false;
-// 		}
-// 	}
-// 	let selects = form.querySelectorAll('select');
-// 	if (selects.length > 0) {
-// 		for (let index = 0; index < selects.length; index++) {
-// 			const select = selects[index];
-// 			const select_default_value = select.getAttribute('data-default');
-// 			select.value = select_default_value;
-// 			select_item(select);
-// 		}
-// 	}
-// }
-
 let viewPass = document.querySelectorAll('.form__viewpass');
 for (let index = 0; index < viewPass.length; index++) {
 	const element = viewPass[index];
@@ -401,19 +260,19 @@ function input_clear_mask(input, input_g_value) {
 }
 
 //RANGE
-const priceSlider = document.querySelector('.return-main-info-ticket__range');
-if (priceSlider) {
-	noUiSlider.create(priceSlider, {
-		start: [10, 45],
-		behaviour: 'drag',
-		step: 1,
-		connect: true,
-		range: {
-			'min': 1,
-			'max': 60
-		}
-	});
-}
+// const priceSlider = document.querySelector('.return-main-info-ticket__range');
+// if (priceSlider) {
+// 	noUiSlider.create(priceSlider, {
+// 		start: [10, 45],
+// 		behaviour: 'drag',
+// 		step: 1,
+// 		connect: true,
+// 		range: {
+// 			'min': 1,
+// 			'max': 60
+// 		}
+// 	});
+// }
 
 const filterSlider = document.querySelector('.filters-search-result__range');
 if (filterSlider) {

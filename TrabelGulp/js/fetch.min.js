@@ -1,31 +1,43 @@
-let dataStatistic = {
-  "ticketsFound": 1300,
-  "boughtTickets": 100,
-  "savingsPurchasedTickets": 1000000,
-  "satisfiedCustomers": 1
-}
-let url = `https://tb.vps.webdock.io/api/info/statistic_useful`
+document.addEventListener('DOMContentLoaded', (event) => {
 
-// replaceData();
-
-async function replaceData() {
-  try {
-    const ticketsFound = await document.querySelectorAll('#ticketsFound')[0]
-    const boughtTickets = await document.querySelectorAll('#boughtTickets')[0]
-    const savingsPurchased_tickets = await document.querySelectorAll('#savingsPurchased_tickets')[0]
-    const satisfiedCustomers = await document.querySelectorAll('#satisfiedCustomers')[0]
-
-    const dataStatistic = await fetchData(url)
-
-    ticketsFound.innerHTML = dataStatistic.ticketsFound.toLocaleString();
-    boughtTickets.innerHTML = dataStatistic.boughtTickets.toLocaleString();
-    savingsPurchased_tickets.innerHTML = dataStatistic.savingsPurchasedTickets.toLocaleString() + " ₽";
-    satisfiedCustomers.innerHTML = dataStatistic.satisfiedCustomers.toLocaleString();
-
-  } catch (error) {
-    console.error(error);
-  } finally {
-    console.log(`Запрос завершен`);
+  let dataStatistic = {
+    "ticketsFound": 1300,
+    "boughtTickets": 100,
+    "savingsPurchasedTickets": 1000000,
+    "satisfiedCustomers": 1
   }
-}
+  let url = `http://194.58.92.109/v1/info/homepageStatistics`
 
+  replaceData();
+
+  async function replaceData() {
+    const ticketsFound = await document.querySelector('#ticketsFound')
+    const boughtTickets = await document.querySelector('#boughtTickets')
+    const savingsPurchased_tickets = await document.querySelector('#savingsPurchased_tickets')
+    const satisfiedCustomers = await document.querySelector('#satisfiedCustomers')
+
+    if (ticketsFound && boughtTickets && savingsPurchased_tickets && satisfiedCustomers) {
+      try {
+        const dataStatistic = await fetchData(url)
+
+        ticketsFound.innerHTML = dataStatistic.ticketsFound.toLocaleString().replaceAll(',',' ');
+        boughtTickets.innerHTML = dataStatistic.boughtTickets.toLocaleString().replaceAll(',',' ');
+        savingsPurchased_tickets.innerHTML = dataStatistic.savingsPurchasedTickets.toLocaleString().replaceAll(',',' ') + " ₽";
+        satisfiedCustomers.innerHTML = dataStatistic.howManyCities.toLocaleString().replaceAll(',',' ');
+
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
+
+
+  async function fetchData(url) {
+    try {
+      const response = await fetch(url)
+      return await response.json()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+})

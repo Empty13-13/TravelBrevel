@@ -1,0 +1,264 @@
+.info-ticket {
+  
+  &__column {
+    flex: 1 1 100%;
+  }
+  
+  &__titleBlock {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 2%;
+    width: 66.2%;
+    margin-bottom: 37px;
+    @media (max-width: $md1+px) {
+      margin-bottom: 35px;
+    }
+    @media (max-width: $md2+px) {
+      margin-bottom: 32px;
+    }
+    @media (max-width: $md3+px) {
+      margin-bottom: 28px;
+    }
+    @media (max-width: $md4+px) {
+      margin-bottom: 17px;
+    }
+    
+    @media (max-width: 900px) {
+      width: 100%;
+    }
+  }
+  
+  &__img-title {
+  
+  }
+  
+  &__title {
+    @media (max-width: 900px) {
+      margin-right: 15px;
+      line-height: 1.2;
+    }
+  }
+}
+
+.main-info-ticket {
+  
+  &__block {
+    display: flex;
+    width: 100%;
+    flex: 1 1 100%;
+    max-height: 255px;
+    
+    @media (max-width: 900px) {
+      flex-direction: column;
+      max-height: 100%;
+    }
+  }
+  
+  &__row {
+    width: 100%;
+    height: 100%;
+    margin-right: 17px;
+  }
+  
+  .hr {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.ticket-main-info-ticket {
+  
+  &__body {
+    padding: 30px 23px 27px 23px;
+  }
+  
+  &__date {
+    white-space: nowrap;
+  }
+}
+
+.info-ticket-times {
+  
+  &__block {
+    display: flex;
+    align-items: flex-end;
+    
+    p {
+      font-family: 'Roboto';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 22px;
+      color: #3D3D3D;
+      margin: 0 17px;
+      
+      span {
+        font-weight: 400;
+      }
+      
+      @media (max-width: $md3+px) {
+        font-size: 12px;
+        line-height: 14px;
+      }
+    }
+    
+    @media (max-width: $md3+px) {
+      img {
+        max-width: 15px;
+      }
+    }
+  }
+  
+  &__text {
+    font-weight: 700;
+    font-size: 12px;
+    color: #7B7B7B;
+    
+    &:nth-child(2) {
+      color: #3D3D3D;
+    }
+    
+    @media (max-width: $md3+px) {
+      font-size: 10px;
+    }
+  }
+}
+
+
+.buy-info-ticket {
+  display: flex;
+  flex: 0 0 32%;
+  background: #FFFFFF;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  @media (max-width: 900px) {
+    margin-top: 20px;
+  }
+  
+  &__body {
+    padding: 40px 22px 30px 22px;
+    flex: 1 1 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    
+    @media (max-width: $md1+px) {
+      margin-bottom: 29px;
+    }
+    @media (max-width: $md2+px) {
+      margin-bottom: 28px;
+    }
+    @media (max-width: $md3+px) {
+      margin-bottom: 27px;
+    }
+    @media (max-width: $md4+px) {
+      margin-bottom: 25px;
+    }
+  }
+  
+  &__price {
+    font-family: 'Montserrat';
+    font-weight: 700;
+    @include adaptiv-value('font-size', 36, 24, 1);
+    color: #3D3D3D;
+  }
+  
+  &__sell {
+    font-family: 'Roboto';
+    font-weight: 700;
+    font-size: 24px;
+    @media (max-width: $md1+px) {
+      font-size: 22px;
+    }
+    @media (max-width: $md2+px) {
+      font-size: 20px;
+    }
+    @media (max-width: $md3+px) {
+      font-size: 18px;
+    }
+    @media (max-width: $md4+px) {
+      font-size: 16px;
+    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 10px;
+    background: #00A0E1;
+    border-radius: 8px;
+    color: white;
+  }
+  
+  &__center {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    
+    @media (max-width: $md1+px) {
+      margin-bottom: 24px;
+    }
+    @media (max-width: $md2+px) {
+      margin-bottom: 23px;
+    }
+    @media (max-width: $md3+px) {
+      margin-bottom: 22px;
+    }
+    @media (max-width: $md4+px) {
+      margin-bottom: 21px;
+    }
+  }
+  
+  &__text {
+    font-weight: 400;
+    font-size: 16px;
+    color: #3D3D3D;
+    margin-bottom: 15px;
+    
+    span {
+      font-weight: 700;
+      color: #3D3D3D;
+      margin-left: 7px;
+    }
+    
+    @media (max-width: $md3+px) {
+      font-size: 14px;
+      margin-left: 4px;
+      margin-bottom: 8px;
+    }
+  }
+  
+  &__btn {
+    background: #F2DF00;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    font-size: 18px;
+    color: #3D3D3D;
+    padding: 15px 0;
+    margin-top: auto;
+    
+    @media (max-width: $md1+px) {
+      font-size: 17px;
+      padding: 14px 0;
+    }
+    @media (max-width: $md2+px) {
+      font-size: 16px;
+      padding: 13px 0;
+    }
+    @media (max-width: $md3+px) {
+      font-size: 15px;
+      padding: 12px 0;
+    }
+    @media (max-width: $md4+px) {
+      font-size: 14px;
+    }
+  }
+}

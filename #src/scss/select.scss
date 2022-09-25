@@ -22,7 +22,7 @@ $height: 46px;
   max-width: 232px;
   
   @media (max-width:900px){
-    width: calc(132px + 182 * (100vw - 320px) / 750)
+    width: calc(132px + 182 * (100vw - 320px) / 750);
   }
   
   &.open {

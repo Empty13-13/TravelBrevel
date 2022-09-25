@@ -62,12 +62,12 @@ class Select {
       this.numeric = options.numeric || 0
       this.type = options.type || 0
 
-      this.#render()
-      this.#setup()
+      this.render()
+      this.setup()
     }
   }
 
-  #render() {
+  render() {
     const {placeholder, data} = this.options
     this.$el.classList.add('select')
     if(this.type === 0) {
@@ -78,7 +78,7 @@ class Select {
     }
   }
 
-  #setup() {
+  setup() {
     this.clickHandler = this.clickHandler.bind(this)
     this.$el.addEventListener('click', this.clickHandler)
     this.$arrow = this.$el.querySelector('[data-type="arrow"]')
@@ -88,8 +88,8 @@ class Select {
   refresh(data){
     this.destroy()
     this.options.data = data
-    this.#render()
-    this.#setup()
+    this.render()
+    this.setup()
   }
 
   clickHandler(event) {

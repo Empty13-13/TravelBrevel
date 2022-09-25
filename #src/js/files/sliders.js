@@ -249,12 +249,12 @@ let slider_main = new Swiper('.slider-block__slider', {
 //
 // });
 
-document.addEventListener("DOMContentLoaded", function(event) {
-	slider_hot.on('slideChange', function () {
-		let titleSlider = document.querySelector('.hot-offer__title');
-		_goto(titleSlider,600)
-	});
-});
+// document.addEventListener("DOMContentLoaded", function(event) {
+// 	slider_hot.on('slideChange', function () {
+// 		let titleSlider = document.querySelector('.hot-offer__title');
+// 		_goto(titleSlider,600)
+// 	});
+// });
 
 let searchResult = new Swiper('.search-result__tickets', {
 	/*
