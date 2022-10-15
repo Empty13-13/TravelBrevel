@@ -1,6 +1,6 @@
 if(document.querySelector('.hot-offer')) {
 // region Global vars
-  var moreBtn = document.querySelector('#moreTicket')
+  let moreBtn = document.querySelector('#moreTicket')
   let filtersStatus = [false, false, false, false];
   let urlTicket = "http://194.58.92.109/v1/advantageousTickets?page="
   let numPage = 0
@@ -19,28 +19,28 @@ if(document.querySelector('.hot-offer')) {
 
 // region AddEventListener
   if (fireBtn) {
-    fireBtn.addEventListener("click", function (e) {
+    fireBtn.addEventListener("click", function () {
       fireBtn.classList.toggle('_active')
       filtersStatus[0] = !filtersStatus[0]
       filterTicket()
     });
   }
   if (fastBtn) {
-    fastBtn.addEventListener("click", function (e) {
+    fastBtn.addEventListener("click", function () {
       fastBtn.classList.toggle('_active')
       filtersStatus[1] = !filtersStatus[1]
       filterTicket()
     });
   }
   if (twiceBtn) {
-    twiceBtn.addEventListener("click", function (e) {
+    twiceBtn.addEventListener("click", function () {
       twiceBtn.classList.toggle('_active')
       filtersStatus[2] = !filtersStatus[2]
       filterTicket()
     });
   }
   if (onceBtn) {
-    onceBtn.addEventListener("click", function (e) {
+    onceBtn.addEventListener("click", function () {
       onceBtn.classList.toggle('_active')
       filtersStatus[3] = !filtersStatus[3]
       filterTicket()
@@ -48,19 +48,17 @@ if(document.querySelector('.hot-offer')) {
   }
 
   if (onceBtn && twiceBtn) {
-    twiceBtn.addEventListener("click", function (e) {
+    twiceBtn.addEventListener("click", function () {
       onceBtn.classList.remove('_active')
       filtersStatus[3] = false
-      filterTicket()
     });
-    onceBtn.addEventListener("click", function (e) {
+    onceBtn.addEventListener("click", function () {
       twiceBtn.classList.remove('_active')
       filtersStatus[2] = false
-      filterTicket()
     });
   }
   if (moreBtn) {
-    moreBtn.addEventListener("click", async function (e) {
+    moreBtn.addEventListener("click", async function () {
       numPage++
       await startTicket()
       filterTicket()
@@ -81,7 +79,7 @@ if(document.querySelector('.hot-offer')) {
     data = data.concat(allData.content)
     totalPages = allData.totalPages
     activeData = JSON.parse(JSON.stringify(data));
-    getTickets()
+    await getTickets()
     moreBtn.disabled = false
   }
 
@@ -117,7 +115,6 @@ if(document.querySelector('.hot-offer')) {
 
 //Функция фильтров
   function filterTicket() {
-    let body = document.querySelector('#dates')
     activeData = JSON.parse(JSON.stringify(data));
 
     if (filtersStatus[0]) {
@@ -162,9 +159,9 @@ if(document.querySelector('.hot-offer')) {
       arrivalCityName,
       arrivalCountryName,
       arrivalDate,
-      currency_name,
+      // currency_name,
       departureCityName,
-      departureCountryName,
+      // departureCountryName,
       departureDate,
       discountPercentage,
       price,
