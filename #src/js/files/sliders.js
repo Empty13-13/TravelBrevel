@@ -296,7 +296,7 @@ let searchResult = new Swiper('.search-result__tickets', {
 				countVisible = total
 			}
 
-			result = `<ul class="pagination-hot-offer__current-list">`
+			let result = `<ul class="pagination-hot-offer__current-list">`
 
 			if (countVisible == total) {
 				for (let i = 0; i < countVisible; i++) {
@@ -424,7 +424,7 @@ let articleshResult = new Swiper('.articles-main__slider', {
 				countVisible = total
 			}
 
-			result = `<ul class="pagination-hot-offer__current-list">`
+			let result = `<ul class="pagination-hot-offer__current-list">`
 
 			if (countVisible == total) {
 				for (let i = 0; i < countVisible; i++) {
@@ -466,7 +466,7 @@ let articleshResult = new Swiper('.articles-main__slider', {
 
 				let plus = (total - countVisible) < current ? 1 : 0;
 				for (let index = total - countVisible - plus; index < total; index++) {
-					result += `<li><a href="#articles-${index+1}" class="pagination-hot-offer__current${current-1==index?currentStr:''}">${index+1}</a></li>`
+					result += `<li><a href="#articles-${index+1}" class="pagination-hot-offer__current${current-1===index?currentStr:''}">${index+1}</a></li>`
 				}
 			}
 

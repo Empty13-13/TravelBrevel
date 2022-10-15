@@ -224,7 +224,7 @@ function inputs_init(inputs) {
 					input_focus_add(input);
 					input.value = '';
 				}
-				form_remove_error(input);
+				// form_remove_error(input);
 			});
 			input.addEventListener('blur', function (e) {
 				if (input.value == '') {

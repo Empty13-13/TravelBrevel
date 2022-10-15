@@ -1,38 +1,64 @@
-let filterBtns = document.querySelectorAll('.filters-hot-offer__btn');
-if (filterBtns.length > 0) {
-  // region Global vars
+if(document.querySelector('.hot-offer')) {
+// region Global vars
   var moreBtn = document.querySelector('#moreTicket')
   let filtersStatus = [false, false, false, false];
   let urlTicket = "http://194.58.92.109/v1/advantageousTickets?page="
   let numPage = 0
-  let ticketData = []
   let activeData = []
   let allData = []
   let data = []
   let totalPages = 0
-  // endregion
+// endregion
 
-  // region AddEventListener
-  filterBtns.forEach((item, index) => {
-    item.addEventListener("click", function (e) {
-      item.classList.toggle('_active')
-      filterBtns[index] = !filterBtns[index]
-      filtersStatus[index] = !filtersStatus[index]
+// region Buttons
+  let fireBtn = document.querySelector('#fireBtn')
+  let fastBtn = document.querySelector('#fastBtn')
+  let twiceBtn = document.querySelector('#twiceBtn')
+  let onceBtn = document.querySelector('#onceBtn')
+// endregion
+
+// region AddEventListener
+  if (fireBtn) {
+    fireBtn.addEventListener("click", function (e) {
+      fireBtn.classList.toggle('_active')
+      filtersStatus[0] = !filtersStatus[0]
       filterTicket()
     });
-  })
-  filterBtns[2].addEventListener("click", function (e) {
-    filterBtns[3].classList.remove('_active')
-    filterBtns[3] = false
-    filtersStatus[3] = false
-    filterTicket()
-  });
-  filterBtns[3].addEventListener("click", function (e) {
-    filterBtns[2].classList.remove('_active')
-    filterBtns[2] = false
-    filtersStatus[2] = false
-    filterTicket()
-  });
+  }
+  if (fastBtn) {
+    fastBtn.addEventListener("click", function (e) {
+      fastBtn.classList.toggle('_active')
+      filtersStatus[1] = !filtersStatus[1]
+      filterTicket()
+    });
+  }
+  if (twiceBtn) {
+    twiceBtn.addEventListener("click", function (e) {
+      twiceBtn.classList.toggle('_active')
+      filtersStatus[2] = !filtersStatus[2]
+      filterTicket()
+    });
+  }
+  if (onceBtn) {
+    onceBtn.addEventListener("click", function (e) {
+      onceBtn.classList.toggle('_active')
+      filtersStatus[3] = !filtersStatus[3]
+      filterTicket()
+    });
+  }
+
+  if (onceBtn && twiceBtn) {
+    twiceBtn.addEventListener("click", function (e) {
+      onceBtn.classList.remove('_active')
+      filtersStatus[3] = false
+      filterTicket()
+    });
+    onceBtn.addEventListener("click", function (e) {
+      twiceBtn.classList.remove('_active')
+      filtersStatus[2] = false
+      filterTicket()
+    });
+  }
   if (moreBtn) {
     moreBtn.addEventListener("click", async function (e) {
       numPage++
@@ -47,7 +73,7 @@ if (filterBtns.length > 0) {
   }
 
 
-  // endregion
+// endregion
 
   async function startTicket() {
     moreBtn.disabled = true
@@ -61,7 +87,7 @@ if (filterBtns.length > 0) {
 
   startTicket()
 
-  // region functions
+// region functions
   async function fetchData(url) {
     try {
       const response = await fetch(url + numPage)
@@ -89,7 +115,7 @@ if (filterBtns.length > 0) {
     }
   }
 
-  //Функция фильтров
+//Функция фильтров
   function filterTicket() {
     let body = document.querySelector('#dates')
     activeData = JSON.parse(JSON.stringify(data));
@@ -128,7 +154,7 @@ if (filterBtns.length > 0) {
     getTickets()
   }
 
-  // region getters
+// region getters
 
   const getTicket = (data) => {
     // region Vars
@@ -283,7 +309,7 @@ if (filterBtns.length > 0) {
     return div
   }
 
-  // endregion
+// endregion
 
-  // endregion
+// endregion
 }
